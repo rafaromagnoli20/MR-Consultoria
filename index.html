@@ -1,10 +1,757 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>MR Consultoria</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escritório Jurídico Virtual MR</title>
+  <style>
+    :root {
+      --bg: #0b0b0d;
+      --panel: #141417;
+      --panel-2: #1c1c21;
+      --gold: #d4af37;
+      --gold-2: #f1d67a;
+      --text: #f5f5f5;
+      --muted: #b6b6b6;
+      --danger: #c94b4b;
+      --ok: #39a96b;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #080809, #111115 55%, #16120a); color: var(--text); }
+    body { min-height: 100vh; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: rgba(12,12,14,.96);
+      border-right: 1px solid rgba(212,175,55,.16);
+      padding: 22px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 8px 22px;
+      border-bottom: 1px solid rgba(212,175,55,.16);
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--gold), #8a6a16);
+      color: #111;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .nav-title {
+      color: var(--gold-2);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      margin: 20px 10px 10px;
+    }
+
+    .nav button {
+      width: 100%;
+      text-align: left;
+      padding: 14px 14px;
+      margin: 8px 0;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: .2s ease;
+      font-size: 15px;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: linear-gradient(135deg, rgba(212,175,55,.14), rgba(212,175,55,.05));
+      border-color: rgba(212,175,55,.22);
+      transform: translateX(2px);
+    }
+
+    .main {
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(212,175,55,.15), rgba(255,255,255,.03));
+      border: 1px solid rgba(212,175,55,.2);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h2 {
+      margin: 0 0 10px;
+      font-size: 30px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: rgba(20,20,23,.98);
+      border: 1px solid rgba(212,175,55,.12);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .card p,
+    .muted {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .kpi { grid-column: span 3; }
+    .wide { grid-column: span 8; }
+    .side { grid-column: span 4; }
+    .full { grid-column: span 12; }
+    .half { grid-column: span 6; }
+
+    .kpi-number {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--gold-2);
+      margin-top: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: .2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), #a6801d);
+      color: #131313;
+    }
+
+    .btn-secondary {
+      background: #222228;
+      color: var(--text);
+      border: 1px solid rgba(212,175,55,.2);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--gold-2);
+      font-weight: 700;
+      background: rgba(212,175,55,.05);
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status-open { background: rgba(57,169,107,.14); color: #7ce2a9; }
+    .status-pending { background: rgba(212,175,55,.14); color: #f4db86; }
+    .status-closed { background: rgba(201,75,75,.14); color: #ff9c9c; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    label { font-size: 14px; color: var(--gold-2); }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(212,175,55,.18);
+      background: #0f0f12;
+      color: white;
+      outline: none;
+    }
+
+    textarea { min-height: 110px; resize: vertical; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .list-box {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .item {
+      border: 1px solid rgba(212,175,55,.12);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,.02);
+    }
+
+    .item strong { display: block; margin-bottom: 6px; }
+
+    .footer-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(212,175,55,.10);
+      color: var(--gold-2);
+      font-size: 12px;
+      margin-right: 6px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: relative; height: auto; }
+      .kpi, .wide, .side, .half, .full { grid-column: span 12; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Sistema Jurídico MR</h1>
-    <p>Seu sistema está rodando!</p>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">MR</div>
+        <div>
+          <h1>Escritório Jurídico Virtual</h1>
+          <span>MR Consultoria</span>
+        </div>
+      </div>
+
+      <div class="nav-title">Menu</div>
+      <nav class="nav">
+        <button class="active" data-section="dashboard">Painel Principal</button>
+        <button data-section="clientes">Clientes</button>
+        <button data-section="processos">Processos</button>
+        <button data-section="pecas">Peças Jurídicas</button>
+        <button data-section="robos">Robô TJSP</button>
+        <button data-section="agenda">Agenda</button>
+        <button data-section="financeiro">Financeiro</button>
+        <button data-section="config">Configurações</button>
+      </nav>
+
+      <div class="nav-title">Atalho</div>
+      <div class="item">
+        <strong>Versão profissional ativa</strong>
+        <span class="muted">Layout premium em preto e dourado, pronto para crescer com novas funções.</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div id="dashboard" class="section active">
+        <div class="topbar">
+          <div class="hero">
+            <h2>Bem-vindo, Dr. Rafael</h2>
+            <p>Este é o núcleo do seu Escritório Jurídico Virtual. Aqui você poderá organizar clientes, acompanhar processos, estruturar peças jurídicas, preparar a base do robô TJSP e profissionalizar o fluxo do escritório com uma apresentação institucional forte.</p>
+            <div class="toolbar">
+              <button class="btn btn-primary" onclick="showSection('clientes')">Novo cliente</button>
+              <button class="btn btn-secondary" onclick="showSection('processos')">Novo processo</button>
+              <button class="btn btn-secondary" onclick="showSection('pecas')">Nova peça</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card kpi">
+            <h3>Clientes ativos</h3>
+            <div class="kpi-number" id="kpiClientes">3</div>
+            <div class="muted">Base inicial do escritório</div>
+          </div>
+          <div class="card kpi">
+            <h3>Processos em andamento</h3>
+            <div class="kpi-number" id="kpiProcessos">4</div>
+            <div class="muted">Controle interno</div>
+          </div>
+          <div class="card kpi">
+            <h3>Peças cadastradas</h3>
+            <div class="kpi-number" id="kpiPecas">4</div>
+            <div class="muted">Modelos estratégicos</div>
+          </div>
+          <div class="card kpi">
+            <h3>Tarefas urgentes</h3>
+            <div class="kpi-number">2</div>
+            <div class="muted">Prioridades do dia</div>
+          </div>
+
+          <div class="card wide">
+            <h3>Processos recentes</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Nº do processo</th>
+                  <th>Área</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardProcessos">
+                <tr>
+                  <td>Paulo Henrique</td>
+                  <td>1000001-00.2026.8.26.0079</td>
+                  <td>Trabalhista</td>
+                  <td><span class="status status-open">Em andamento</span></td>
+                </tr>
+                <tr>
+                  <td>Celi Eloina</td>
+                  <td>1000002-00.2026.8.26.0079</td>
+                  <td>Servidor Público</td>
+                  <td><span class="status status-pending">Aguardando</span></td>
+                </tr>
+                <tr>
+                  <td>Mariana Romagnoli</td>
+                  <td>1000003-00.2026.8.26.0079</td>
+                  <td>Tributário</td>
+                  <td><span class="status status-open">Em andamento</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card side">
+            <h3>Áreas estratégicas</h3>
+            <span class="tag">Trabalhista</span>
+            <span class="tag">Servidor Público</span>
+            <span class="tag">Administrativo</span>
+            <span class="tag">Constitucional</span>
+            <span class="tag">Planejamento Previdenciário</span>
+            <p class="footer-note">Este espaço pode ser expandido com dashboards, relatórios, filtros e automações.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="clientes" class="section">
+        <div class="card full">
+          <h3>Cadastro de Clientes</h3>
+          <p class="muted">Cadastre aqui os dados essenciais para organizar seu escritório.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label>Nome do cliente</label>
+              <input id="clienteNome" placeholder="Ex.: Paulo Henrique da Silva" />
+            </div>
+            <div class="field">
+              <label>CPF/CNPJ</label>
+              <input id="clienteDoc" placeholder="Ex.: 000.000.000-00" />
+            </div>
+            <div class="field">
+              <label>Telefone</label>
+              <input id="clienteTel" placeholder="Ex.: (14) 99999-9999" />
+            </div>
+            <div class="field">
+              <label>E-mail</label>
+              <input id="clienteEmail" placeholder="Ex.: cliente@email.com" />
+            </div>
+            <div class="field full">
+              <label>Observações</label>
+              <textarea id="clienteObs" placeholder="Informações relevantes do atendimento"></textarea>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button class="btn btn-primary" onclick="addCliente()">Salvar cliente</button>
+            <button class="btn btn-secondary" onclick="clearClienteForm()">Limpar</button>
+          </div>
+          <div id="listaClientes" class="list-box"></div>
+        </div>
+      </div>
+
+      <div id="processos" class="section">
+        <div class="card full">
+          <h3>Cadastro de Processos</h3>
+          <p class="muted">Registre os dados centrais de cada caso do escritório.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label>Cliente</label>
+              <input id="procCliente" placeholder="Ex.: Celi Eloina Salvador Romanholi" />
+            </div>
+            <div class="field">
+              <label>Número do processo</label>
+              <input id="procNumero" placeholder="Ex.: 1000000-00.2026.8.26.0079" />
+            </div>
+            <div class="field">
+              <label>Área</label>
+              <select id="procArea">
+                <option>Trabalhista</option>
+                <option>Servidor Público</option>
+                <option>Cível</option>
+                <option>Administrativo</option>
+                <option>Constitucional</option>
+                <option>Previdenciário</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Status</label>
+              <select id="procStatus">
+                <option>Em andamento</option>
+                <option>Aguardando</option>
+                <option>Encerrado</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label>Resumo</label>
+              <textarea id="procResumo" placeholder="Resumo estratégico do caso"></textarea>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button class="btn btn-primary" onclick="addProcesso()">Salvar processo</button>
+            <button class="btn btn-secondary" onclick="clearProcessoForm()">Limpar</button>
+          </div>
+          <div id="listaProcessos" class="list-box"></div>
+        </div>
+      </div>
+
+      <div id="pecas" class="section">
+        <div class="grid">
+          <div class="card half">
+            <h3>Modelos estratégicos</h3>
+            <div class="list-box" id="listaPecasFixas">
+              <div class="item"><strong>Mandado de Segurança</strong><span class="muted">Estrutura robusta para direitos líquidos e certos.</span></div>
+              <div class="item"><strong>Reclamação Trabalhista</strong><span class="muted">Modelo com foco em fatos, fundamentos e pedidos.</span></div>
+              <div class="item"><strong>Ação de Cobrança</strong><span class="muted">Base para demandas de natureza patrimonial.</span></div>
+              <div class="item"><strong>Contestação</strong><span class="muted">Defesa técnica com organização lógica e estratégica.</span></div>
+            </div>
+          </div>
+          <div class="card half">
+            <h3>Novo modelo de peça</h3>
+            <div class="form-grid">
+              <div class="field">
+                <label>Título</label>
+                <input id="pecaTitulo" placeholder="Ex.: Ação de Obrigação de Fazer" />
+              </div>
+              <div class="field">
+                <label>Área</label>
+                <input id="pecaArea" placeholder="Ex.: Servidor Público" />
+              </div>
+              <div class="field full">
+                <label>Descrição</label>
+                <textarea id="pecaDescricao" placeholder="Descreva a finalidade estratégica da peça"></textarea>
+              </div>
+            </div>
+            <div class="toolbar">
+              <button class="btn btn-primary" onclick="addPeca()">Salvar peça</button>
+            </div>
+            <div id="listaPecas" class="list-box"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="robos" class="section">
+        <div class="card full">
+          <h3>Central do Robô TJSP</h3>
+          <p class="muted">Esta área já deixa preparada a frente operacional para futura integração com consulta processual, automação de leitura e geração de relatórios.</p>
+          <div class="list-box">
+            <div class="item"><strong>Módulo 1 — Consulta processual</strong><span class="muted">Base visual para busca de número, classe, vara e movimentações.</span></div>
+            <div class="item"><strong>Módulo 2 — Captura de dados</strong><span class="muted">Espaço reservado para integração com robôs, APIs ou scripts.</span></div>
+            <div class="item"><strong>Módulo 3 — Relatórios</strong><span class="muted">Saída futura para PDF, Excel e painéis internos.</span></div>
+          </div>
+          <div class="toolbar">
+            <button class="btn btn-secondary">Preparar integração futura</button>
+            <button class="btn btn-secondary">Mapear requisitos</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="agenda" class="section">
+        <div class="card full">
+          <h3>Agenda Jurídica</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Compromisso</th>
+                <th>Local</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>18/04/2026</td>
+                <td>Reunião com cliente</td>
+                <td>Escritório / Online</td>
+                <td><span class="status status-open">Confirmado</span></td>
+              </tr>
+              <tr>
+                <td>19/04/2026</td>
+                <td>Prazo processual</td>
+                <td>TJSP</td>
+                <td><span class="status status-pending">Atenção</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="financeiro" class="section">
+        <div class="grid">
+          <div class="card half">
+            <h3>Resumo financeiro</h3>
+            <p class="muted">Área inicial para honorários, contratos, entradas e controle gerencial.</p>
+            <div class="kpi-number">R$ 18.500</div>
+            <div class="muted">Previsão de honorários cadastrados</div>
+          </div>
+          <div class="card half">
+            <h3>Status do caixa</h3>
+            <div class="list-box">
+              <div class="item"><strong>Recebido</strong><span class="muted">R$ 7.500</span></div>
+              <div class="item"><strong>A receber</strong><span class="muted">R$ 11.000</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="config" class="section">
+        <div class="card full">
+          <h3>Configurações do Escritório</h3>
+          <p class="muted">Personalização visual e institucional da plataforma.</p>
+          <div class="list-box">
+            <div class="item"><strong>Nome institucional:</strong> MR Consultoria</div>
+            <div class="item"><strong>Identidade visual:</strong> Preto e dourado</div>
+            <div class="item"><strong>Perfil:</strong> Escritório Jurídico Virtual Profissional</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.nav button');
+    const sections = document.querySelectorAll('.section');
+
+    function showSection(id) {
+      sections.forEach(section => section.classList.remove('active'));
+      buttons.forEach(btn => btn.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelector(`[data-section="${id}"]`)?.classList.add('active');
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        showSection(button.dataset.section);
+      });
+    });
+
+    const clientes = [
+      { nome: 'Paulo Henrique da Silva', doc: '***.***.***-**', tel: '(14) 99999-1111', email: 'cliente1@email.com', obs: 'Caso trabalhista com documentação médica.' },
+      { nome: 'Celi Eloina Salvador Romanholi', doc: '***.***.***-**', tel: '(14) 99999-2222', email: 'cliente2@email.com', obs: 'Direitos de servidora pública.' },
+      { nome: 'Mariana A. F. G. Romagnoli', doc: '***.***.***-**', tel: '(14) 99999-3333', email: 'cliente3@email.com', obs: 'Questão tributária.' }
+    ];
+
+    const processos = [
+      { cliente: 'Paulo Henrique da Silva', numero: '1000001-00.2026.8.26.0079', area: 'Trabalhista', status: 'Em andamento', resumo: 'Doença ocupacional e reflexos.' },
+      { cliente: 'Celi Eloina Salvador Romanholi', numero: '1000002-00.2026.8.26.0079', area: 'Servidor Público', status: 'Aguardando', resumo: 'Quinquênios e sexta-parte.' },
+      { cliente: 'Mariana A. F. G. Romagnoli', numero: '1000003-00.2026.8.26.0079', area: 'Tributário', status: 'Em andamento', resumo: 'Restituição de IR indevido.' },
+      { cliente: 'Douglas B. I. Mundin', numero: '1000004-00.2026.8.26.0079', area: 'Criminal', status: 'Encerrado', resumo: 'Atuação em termo circunstanciado.' }
+    ];
+
+    const pecas = [];
+
+    function statusClass(status) {
+      if (status === 'Em andamento' || status === 'Confirmado') return 'status-open';
+      if (status === 'Aguardando' || status === 'Atenção') return 'status-pending';
+      return 'status-closed';
+    }
+
+    function renderClientes() {
+      const box = document.getElementById('listaClientes');
+      box.innerHTML = clientes.map(c => `
+        <div class="item">
+          <strong>${c.nome}</strong>
+          <div class="muted">Documento: ${c.doc}</div>
+          <div class="muted">Telefone: ${c.tel}</div>
+          <div class="muted">E-mail: ${c.email}</div>
+          <div class="muted">Observações: ${c.obs}</div>
+        </div>
+      `).join('');
+      document.getElementById('kpiClientes').textContent = clientes.length;
+    }
+
+    function renderProcessos() {
+      const box = document.getElementById('listaProcessos');
+      box.innerHTML = processos.map(p => `
+        <div class="item">
+          <strong>${p.cliente}</strong>
+          <div class="muted">Processo: ${p.numero}</div>
+          <div class="muted">Área: ${p.area}</div>
+          <div class="muted">Resumo: ${p.resumo}</div>
+          <div style="margin-top:8px"><span class="status ${statusClass(p.status)}">${p.status}</span></div>
+        </div>
+      `).join('');
+
+      document.getElementById('dashboardProcessos').innerHTML = processos.slice(0, 5).map(p => `
+        <tr>
+          <td>${p.cliente}</td>
+          <td>${p.numero}</td>
+          <td>${p.area}</td>
+          <td><span class="status ${statusClass(p.status)}">${p.status}</span></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('kpiProcessos').textContent = processos.length;
+    }
+
+    function renderPecas() {
+      const box = document.getElementById('listaPecas');
+      box.innerHTML = pecas.map(p => `
+        <div class="item">
+          <strong>${p.titulo}</strong>
+          <div class="muted">Área: ${p.area}</div>
+          <div class="muted">${p.descricao}</div>
+        </div>
+      `).join('');
+      document.getElementById('kpiPecas').textContent = 4 + pecas.length;
+    }
+
+    function addCliente() {
+      const nome = document.getElementById('clienteNome').value.trim();
+      const doc = document.getElementById('clienteDoc').value.trim();
+      const tel = document.getElementById('clienteTel').value.trim();
+      const email = document.getElementById('clienteEmail').value.trim();
+      const obs = document.getElementById('clienteObs').value.trim();
+      if (!nome) return alert('Informe o nome do cliente.');
+      clientes.unshift({ nome, doc, tel, email, obs });
+      clearClienteForm();
+      renderClientes();
+      alert('Cliente cadastrado com sucesso.');
+    }
+
+    function clearClienteForm() {
+      ['clienteNome','clienteDoc','clienteTel','clienteEmail','clienteObs'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    function addProcesso() {
+      const cliente = document.getElementById('procCliente').value.trim();
+      const numero = document.getElementById('procNumero').value.trim();
+      const area = document.getElementById('procArea').value;
+      const status = document.getElementById('procStatus').value;
+      const resumo = document.getElementById('procResumo').value.trim();
+      if (!cliente || !numero) return alert('Preencha cliente e número do processo.');
+      processos.unshift({ cliente, numero, area, status, resumo });
+      clearProcessoForm();
+      renderProcessos();
+      alert('Processo cadastrado com sucesso.');
+    }
+
+    function clearProcessoForm() {
+      ['procCliente','procNumero','procResumo'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('procArea').selectedIndex = 0;
+      document.getElementById('procStatus').selectedIndex = 0;
+    }
+
+    function addPeca() {
+      const titulo = document.getElementById('pecaTitulo').value.trim();
+      const area = document.getElementById('pecaArea').value.trim();
+      const descricao = document.getElementById('pecaDescricao').value.trim();
+      if (!titulo) return alert('Informe o título da peça.');
+      pecas.unshift({ titulo, area, descricao });
+      ['pecaTitulo','pecaArea','pecaDescricao'].forEach(id => document.getElementById(id).value = '');
+      renderPecas();
+      alert('Peça cadastrada com sucesso.');
+    }
+
+    renderClientes();
+    renderProcessos();
+    renderPecas();
+  </script>
 </body>
 </html>
